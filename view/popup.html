@@ -1,25 +1,46 @@
 <html>
   <head>
     <title>Usefull Bookmark</title>
-    <link rel="stylesheet" href="/css/materialize.min.css">
-    <script type="text/javascript" src="/js/jquery.js"></script>
-    <script type="text/javascript" src="/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="../css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <script type="text/javascript" src="../js/bookmark.js"></script>
+    <style type="text/css">
+h1 {
+  font-size: 3em;
+}
+html, body {
+  min-width: 500px;
+    width: 600px;
+}
+form {
+  padding: 20px;
+}
+a[id^=opt-] {
+  z-index: 9999;
+}
+    </style>
   </head>
-  <body class="row green lighten-2">
+  <body class="row">
     <div>
-      <h1 class="center-align col s12 white-text">Bookmarks</h1>
-      <div class="col s12 green darken-2">
-        <input type="text" id="search">
-        <a class="btn blue lighten-1 waves-effect waves-light">Search</a>
-      </div>
-      <div class="col s12 green lighten-1 white-text">
-        <ul>
-          <li>a</li>
-          <li>a</li>
-          <li>a</li>
-          <li>a</li>
+      <h1 class="center-align col s12">Bookmarks</h1>
+      <form class="col s12 container" id="f-search">
+        <div class="col s12 input-field">
+          <label for="search">Text</label>
+          <input type="text" id="search">
+        </div>
+        <div>
+          <a class="btn blue lighten-1 waves-effect waves-light col s2" id="add" style="margin-bottom: 20px;">add</a><br>
+          <a class="btn blue lighten-1 waves-effect waves-light col offset-s7 s3" id="exec" style="margin-bottom: 20px;">Search</a><br>
+        </div>
+      </form>
+      <hr>
+      <div class="col s12 flow-text">
+        <ul id="result">
         </ul>
-      </div>
     </div>
+    <div class="modal" id="option_modal"></div>
+    <div class="modal-footer"></a>
   </body>
 </html>
