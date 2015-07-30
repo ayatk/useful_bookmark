@@ -26,9 +26,12 @@ $(function() {
     $("#f-search").submit();
   });
   $("#add").click(add_bookmark);
-  $("#f-search").submit(function(event) {
+  $("#f-search").bind("submit keyup", function(event) {
     event.preventDefault();
     var text = $("#search").val();
+    if (text === "") {
+      return true;
+    }
     var sql = "select * from bookmark where ";
     var d = text.replace(/\s+/, " ").split(" ");
     for (var i = 0; i < d.length; i++) {
@@ -42,13 +45,16 @@ $(function() {
         case "url":
           sql += 'url like "%' + m[1] + '%"';
           break;
+        case "all":
+          sql += '(url like "%' + m[1] + '%" or name like "%' + m[1] + '%" or id in (select bid from tag where name like "%' + m[1] + '%"))';
+          break;
         default:
           sql += 'name like "%' + d[i] + '%"';
         }
       } else if (d[i][0] == "#") {
         var hash = d[i].substr(1);
-        sql += 'id in (select bid from tag where name = "' + hash + '")';
-      } else {
+        sql += 'id in (select bid from tag where name like "%' + hash + '%")';
+      } else if (d[i] !== "") {
         sql += 'name like "%' + d[i] + '%"';
       }
       if (i + 1 < d.length) {
@@ -65,6 +71,7 @@ $(function() {
         default:
           sql += " and ";
         }
+        continue;
       }
     }
     console.log(sql);
