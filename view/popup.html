@@ -21,6 +21,14 @@ form {
 a[id^=opt-] {
   z-index: 9999;
 }
+.result-title {
+  float: left;
+  max-width: 94%;
+}
+
+#result {
+  border: 0
+}
     </style>
   </head>
   <body class="row">
@@ -35,7 +43,7 @@ a[id^=opt-] {
           <a class="btn blue lighten-1 waves-effect waves-light" id="add">add</a>
         </div>
         <div class="input-field col s4">
-          <select class="browser-default" id="tags-select">
+          <select class="browser-default" id="tags-select" style="height: 36px;">
             <option value="0" disabled selected>Tags</option>
           </select>
         </div>

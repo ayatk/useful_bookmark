@@ -148,7 +148,7 @@ function search_bookmark(event) {
       var res = '<li class="collection-header"><h6>' + r.rows.length + ' results</h6></li>';
       for(var i = 0; i < r.rows.length; i++) {
         var item = r.rows.item(i);
-        res += '<li class="black-text collection-item"><span class="title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><p><br><span class="badge tags" data-id="' + item.id + '"></span></p></li>';
+        res += '<li class="black-text collection-item"><span class="title result-title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><p style="clear: both"><br><span class="badge tags" data-id="' + item.id + '"></span></p></li>';
         get_tags(item.id);
       }
       $("#result").html(res);
