@@ -197,7 +197,7 @@ function get_tags(id) {
 function add_bookmark() {
   if(confirm("Are you sure?")) {
     var tab = chrome.tabs.getSelected(null, function(tab) {
-      db_query("insert or ignore into bookmark(name, url) values(\"" + (tab["title"]) + "\", \"" + (tab["url"]) + "\");");
+      db_query("insert or ignore into bookmark(name, url) values('" + (tab["title"]) + "', '" + (tab["url"]) + "');");
     });
   }
 }

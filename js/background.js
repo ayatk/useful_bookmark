@@ -8,7 +8,7 @@ function db_query(sql) {
 }
 
 function add_bookmark(info, tab) {
-  db_query("insert or ignore into bookmark(name, url) values(\"" + (tab["title"]) + "\", \"" + (tab["url"]) + "\");", []);
+  db_query("insert or ignore into bookmark(name, url) values('" + (tab["title"]) + "', '" + (tab["url"]) + "');", []);
 }
 
 chrome.contextMenus.create({"title": "Add to bookmark", "onclick": add_bookmark});
