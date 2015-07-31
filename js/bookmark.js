@@ -36,15 +36,11 @@ $(function() {
     db_query('update bookmark ' + ' set name = "' + $("#opt_name").val() + '", url = "' + $("#opt_url").val() + '" where id = ' + id);
     db_query('delete from tag where bid = ' + id);
     var tags = $("#opt_tags").val().split(",");
-    console.log(tags);
     for(var i = 0; i < tags.length; i++) {
       if (tags[i] == "") continue;
       db_query('insert into tag(bid, name) values(' + id + ', "' + tags[i] + '");');
     }
     get_tags(id);
-    db_query("select * from bookmark where id = " + id).done(function(r) {
-      modal_generate(r.rows.item(0));
-    });
 
     $("#option_modal").closeModal();
   });
