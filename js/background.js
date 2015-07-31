@@ -1,4 +1,3 @@
-importScripts('/js/jquery.js');
 var db = openDatabase("bookmark", "1.0", "bookmark", 65536);
 db_query("create table if not exists bookmark(id integer primary key autoincrement, name text, url text);");
 db_query("create table if not exists tag     (id integer primary key autoincrement, bid integer, name text);");
