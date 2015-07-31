@@ -13,10 +13,7 @@
  * create table if not exists tag     (id integer primary key autoincrement, bid integer, name text);
  * create table if not exists memo    (id integer primary key autoincrement, bid integer, value text);
  * */
-var modal = [];
 var db = null;
-var l;
-var ret;
 $(function() {
   db = openDatabase("bookmark", "1.0", "bookmark", 65536);
   db_query("create table if not exists bookmark(id integer primary key autoincrement, name text unique, url text unique);");
@@ -54,6 +51,20 @@ $(function() {
       db_query("delete from bookmark where id = " + id);
     }
     $("#option_modal").closeModal();
+  });
+
+  db_query("select * from tag group by name").done(function(r) {
+    for(var i = 0; i < r.rows.length; i++) {
+      var item = r.rows.item(i);
+      $("#tags-select").append($("<option>").val(item.name).text(item.name));
+    }
+  });
+  $("#tags-select").change(function(event) {
+    $("#search").val($("#search").val() + ($("#search").val().length<1?"":" ") + "#" + $(this).val());
+    $(this).val(0);
+    console.log($("#search").val());
+    $("#f-search").keyup();
+    return false;
   });
 });
 
@@ -134,15 +145,13 @@ function search_bookmark(event) {
     $("#result").empty();
 
     db_query(sql).done(function(r) {
-      var res = '<div class="col s12">' + r.rows.length + ' results</div>';
-      var dd = "";
+      var res = '<li class="collection-header"><h6>' + r.rows.length + ' results</h6></li>';
       for(var i = 0; i < r.rows.length; i++) {
         var item = r.rows.item(i);
-        res += '<li class="black-text"><span class="col s8"><a href="' + item.url + '" target="_blank" class="tooltipped" data-position="right" data-tooltip="' + item.url + '">' + item.name + '</a></span><span class="col s4"><span class="badge tags" data-id="' + item.id + '"></span><a href="#" class="option-link" data-id="' + item.id + '">option</a></span></li><br>';
+        res += '<li class="black-text collection-item"><span class="title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><p><br><span class="badge tags" data-id="' + item.id + '"></span></p></li>';
         get_tags(item.id);
       }
       $("#result").html(res);
-      $("body").append(dd);
       $('.tooltipped').tooltip({delay: 10});
       $(".option-link").click(function() {
         var id = $(this).data("id");
@@ -173,16 +182,13 @@ function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function(r2) {
     var res = "";
     var id;
-    for(var j = 0; j < Math.min(2, r2.rows.length); j++) {
+    for(var j = 0; j < r2.rows.length; j++) {
       var tags = r2.rows.item(j);
       res += tags.name;
-      if (j + 1 < Math.min(2, r2.rows.length)) {
+      if (j < r2.rows.length - 1) {
         res += ", ";
       }
       id = tags.bid;
-    }
-    if (r2.rows.length > 2) {
-      res += "...";
     }
     $(".tags[data-id='" + id + "']").text(res);
   });
