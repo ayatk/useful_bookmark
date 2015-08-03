@@ -13,9 +13,8 @@
  * create table if not exists tag     (id integer primary key autoincrement, bid integer, name text);
  * create table if not exists memo    (id integer primary key autoincrement, bid integer, value text);
  * */
-var db = null;
+var dfds = [];
 $(function() {
-  db = openDatabase("bookmark", "1.0", "bookmark", 65536);
   db_query("create table if not exists bookmark(id integer primary key autoincrement, name text unique, url text unique);");
   db_query("create table if not exists tag     (id integer primary key autoincrement, bid integer, name text);");
   db_query("create table if not exists memo    (id integer primary key autoincrement, bid integer, value text);");
@@ -55,8 +54,8 @@ $(function() {
   });
 
   db_query("select * from tag group by name").done(function(r) {
-    for(var i = 0; i < r.rows.length; i++) {
-      var item = r.rows.item(i);
+    for(var i = 0; i < r.length; i++) {
+      var item = r[i];
       $("#tags-select").append($("<option>").val(item.name).text(item.name));
     }
   });
@@ -71,16 +70,10 @@ $(function() {
 
 function db_query(sql) {
   var dfd = jQuery.Deferred();
-  db.transaction(
-    function(t) {
-      t.executeSql(sql,
-        [],
-        function(t, r) {
-          dfd.resolve(r);
-        }
-      );
-    }
-  );
+  chrome.runtime.sendMessage({action:"sql", sql:sql}, function (r) {
+    console.log(r);
+    dfds[r.id] = dfd;
+  });
   return dfd.promise();
 }
 
@@ -146,9 +139,9 @@ function search_bookmark(event) {
     $("#result").empty();
 
     db_query(sql).done(function(r) {
-      var res = '<li class="collection-header"><h6>' + r.rows.length + ' results</h6></li>';
-      for(var i = 0; i < r.rows.length; i++) {
-        var item = r.rows.item(i);
+      var res = '<li class="collection-header"><h6>' + r.length + ' results</h6></li>';
+      for(var i = 0; i < r.length; i++) {
+        var item = r[i];
         res += '<li class="black-text collection-item"><span class="title result-title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><p style="clear: both"><br><span class="badge tags" data-id="' + item.id + '"></span></p></li>';
         get_tags(item.id);
       }
@@ -158,15 +151,15 @@ function search_bookmark(event) {
         var id = $(this).data("id");
         $("#opt_apply").data("id", id);
         db_query('select * from bookmark where id = ' + id).then(function(r) {
-          $("#opt_url").val(r.rows.item(0).url);
-          $("#opt_name").val(r.rows.item(0).name);
+          $("#opt_url").val(r[0].url);
+          $("#opt_name").val(r[0].name);
 
           return db_query('select id, bid, name from tag where bid = ' + id);
         }).done(function(r) {
           var tags_csv = "";
-          for (var j = 0; j < r.rows.length; j++) {
-            tags_csv += r.rows.item(j).name;
-            if (j < r.rows.length - 1) {
+          for (var j = 0; j < r.length; j++) {
+            tags_csv += r[j].name;
+            if (j < r.length - 1) {
               tags_csv += ",";
             }
           }
@@ -183,10 +176,10 @@ function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function(r2) {
     var res = "";
     var id;
-    for(var j = 0; j < r2.rows.length; j++) {
-      var tags = r2.rows.item(j);
+    for(var j = 0; j < r2.length; j++) {
+      var tags = r2[j];
       res += tags.name;
-      if (j < r2.rows.length - 1) {
+      if (j < r2.length - 1) {
         res += ", ";
       }
       id = tags.bid;
@@ -198,8 +191,18 @@ function get_tags(id) {
 function add_bookmark() {
   if(confirm("Are you sure?")) {
     var tab = chrome.tabs.getSelected(null, function(tab) {
-      db_query("insert or ignore into bookmark(name, url) values('" + (tab["title"]) + "', '" + (tab["url"]) + "');");
+      chrome.runtime.sendMessage({action:"add", tab:tab});
     });
   }
 }
 
+chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
+  switch(req.action) {
+  case 'resolve':
+    console.log(req);
+    dfds[req.id].resolve(req.data);
+    break;
+  default:
+    break;
+  }
+});
