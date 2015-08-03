@@ -23,8 +23,7 @@ function db_query_d(sql) {
 }
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendRes) {
-  console.log(message.text);
-  //検索文構築
+  // 検索文構築
   var sql = "";
   var d = message.text.replace(/\s+/, " ").split(" ");
   var s = 0;
@@ -77,25 +76,26 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendRes) {
   }
   sql = "select * from bookmark where " + sql;
 
-  //取得
+  // 取得
   db_query_d(sql).done(function(res) {
     var rowLen = res.rows.length;
     if(rowLen === 1) {
+      // マッチしたものが1つの場合は転送
       var url = res.rows[0].url;
-      var updateProp = {
-        url: url
-      };
+      var updateProp = { url: url };
       chrome.tabs.update(updateProp)
     } else {
-      //html生成
+      // html生成
       var html = "";
       for(var i = 0; i < rowLen; i++) {
-          html += '<div class="col s6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + res.rows[i].name + '</span></div>';
-          html += '<div class="card-action"><a href="' + res.rows[i].url + '">開く</a></div></div></div>';
+        html += '<div class="col s6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + res.rows[i].name + '</span></div>';
+        html += '<div class="card-action"><a href="' + res.rows[i].url + '">開く</a></div></div></div>';
       }
       if(rowLen === 0) {
-          html += '<div class="col s12"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Nothing Found</span></div></div></div>';
+      // マッチしたものが0つの場合はnothing foundと表示
+        html += '<div class="col s12"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Nothing Found</span></div></div></div>';
       }
+      // htmlを適応
       $(document.documentElement).find("#result").append(html);
     }
   });
