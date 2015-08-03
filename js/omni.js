@@ -15,16 +15,7 @@ function db_query_d(sql) {
 
 chrome.omnibox.onInputChanged.addListener(
   function(text, suggest) {
-	if(text === "") {
-	  var suggestions = [
-        {content: "popup.html", description: "UsefulBookmarkで検索"}
-      ];
-    } else {
-      var suggestions = [
-        {content: text, description: "UsefulBookmarkで検索: " + text}
-      ];
-    }
-    suggest(suggestions);
+    chrome.omnibox.setDefaultSuggestion({description: "UsefulBookmarkで検索: " + text});
 });
 
 chrome.omnibox.onInputEntered.addListener(
