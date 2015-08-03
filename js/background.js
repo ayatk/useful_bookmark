@@ -89,7 +89,7 @@ chrome.omnibox.onInputChanged.addListener(
         var rowLen = res.rows.length;
         var suggests = [];
         if(rowLen > 5) {
-          rowLen = 5; // 最大サジェスト表示数5
+          rowLen = 5; // 最大サジェスト表示数4
         }
         for(var i=0; i < rowLen; i++) {
           suggests.push({ content: res.rows[i].url, description: res.rows[i].name});
@@ -126,4 +126,5 @@ chrome.omnibox.onInputEntered.addListener(
       var createProp = { url: url };
       chrome.tabs.create(createProp);
     }
-});
+  }
+);
