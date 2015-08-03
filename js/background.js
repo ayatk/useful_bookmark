@@ -20,12 +20,16 @@ function db_query(sql, id) {
   return dfd.promise();
 }
 
-function add_bookmark(tab) {
-  db_query("insert or ignore into bookmark(name, url) values('" + (tab["title"]) + "', '" + (tab["url"]) + "');", []);
+function add_bookmark(title, url) {
+  db_query("insert or ignore into bookmark(name, url) values('" + title + "', '" + url + "');", []);
+}
+
+function del_bookmark(id) {
+  db_query("delete from bookmark where id = " + id);
 }
 
 function cb_add(info, tab) {
-  add_bookmark(tab);
+  add_bookmark(tab["title"], tab["url"]);
 }
 
 chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
@@ -42,7 +46,7 @@ chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       sendResponse({id: id++});
       break;
     case 'add':
-      add_bookmark(req.tab);
+      add_bookmark(req.title, req.url);
       break;
     default:
       break;

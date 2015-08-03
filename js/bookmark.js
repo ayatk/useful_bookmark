@@ -54,15 +54,13 @@ $(function() {
   });
 
   db_query("select * from tag group by name").done(function(r) {
-    for(var i = 0; i < r.length; i++) {
-      var item = r[i];
+    r.forEach(function(item) {
       $("#tags-select").append($("<option>").val(item.name).text(item.name));
-    }
+    });
   });
   $("#tags-select").change(function(event) {
     $("#search").val($("#search").val() + ($("#search").val().length<1?"":" ") + "#" + $(this).val());
     $(this).val(0);
-    console.log($("#search").val());
     $("#f-search").keyup();
     return false;
   });
@@ -71,7 +69,6 @@ $(function() {
 function db_query(sql) {
   var dfd = jQuery.Deferred();
   chrome.runtime.sendMessage({action:"sql", sql:sql}, function (r) {
-    console.log(r);
     dfds[r.id] = dfd;
   });
   return dfd.promise();
@@ -140,8 +137,7 @@ function search_bookmark(event) {
 
     db_query(sql).done(function(r) {
       var res = '<li class="collection-header"><h6>' + r.length + ' results</h6></li>';
-      for(var i = 0; i < r.length; i++) {
-        var item = r[i];
+      r.forEach(function(item) {
         res += '<li class="black-text collection-item"><span class="title result-title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><p style="clear: both"><br><span class="badge tags" data-id="' + item.id + '"></span></p></li>';
         get_tags(item.id);
       }
@@ -156,14 +152,7 @@ function search_bookmark(event) {
 
           return db_query('select id, bid, name from tag where bid = ' + id);
         }).done(function(r) {
-          var tags_csv = "";
-          for (var j = 0; j < r.length; j++) {
-            tags_csv += r[j].name;
-            if (j < r.length - 1) {
-              tags_csv += ",";
-            }
-          }
-          $("#opt_tags").val(tags_csv);
+          $("#opt_tags").val(r.map(function(d) {return d.name;}).join(","));
 
           $("#option_modal").openModal();
         });
@@ -174,24 +163,14 @@ function search_bookmark(event) {
 
 function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function(r2) {
-    var res = "";
-    var id;
-    for(var j = 0; j < r2.length; j++) {
-      var tags = r2[j];
-      res += tags.name;
-      if (j < r2.length - 1) {
-        res += ", ";
-      }
-      id = tags.bid;
-    }
-    $(".tags[data-id='" + id + "']").text(res);
+    $(".tags[data-id='" + id + "']").text(r2.map(function(d) {return d.name;}).join(", "));
   });
 }
 
 function add_bookmark() {
   if(confirm("Are you sure?")) {
     var tab = chrome.tabs.getSelected(null, function(tab) {
-      chrome.runtime.sendMessage({action:"add", tab:tab});
+      chrome.runtime.sendMessage({action:"add", title:tab["title"], url:tab["url"]});
     });
   }
 }
