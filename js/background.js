@@ -28,11 +28,11 @@ function add_bookmark(info, tab) {
 
 chrome.contextMenus.create({"title": "Add to bookmark", "onclick": add_bookmark});
 
-//Omnibox
+// Omnibox
 chrome.omnibox.onInputChanged.addListener(
   function(text, suggest) {
     if(text !== "") {
-      //検索文構築
+      // 検索文構築
       var sql = "";
       var d = text.replace(/\s+/, " ").split(" ");
       var s = 0;
@@ -89,7 +89,7 @@ chrome.omnibox.onInputChanged.addListener(
         var rowLen = res.rows.length;
         var suggests = [];
         if(rowLen > 5) {
-          rowLen = 5;
+          rowLen = 5; // 最大サジェスト表示数5
         }
         for(var i=0; i < rowLen; i++) {
           suggests.push({ content: res.rows[i].url, description: res.rows[i].name});
@@ -97,22 +97,21 @@ chrome.omnibox.onInputChanged.addListener(
         suggest(suggests);
       });
     }
+    // デフォルトサジェスト
     chrome.omnibox.setDefaultSuggestion({description: "UsefulBookmarkで検索: " + text});
   }
 );
 chrome.omnibox.onInputEntered.addListener(
   function(text) {
+    // サジェストをクリックした場合
     if(text.match(/^(?:https?|chrome):\/\/.*/)) {
       var url = text;
-      var createProp = {
-        url: url
-      };
+      var createProp = { url: url };
       chrome.tabs.create(createProp);
+    // UsefulBookmarkで検索をクリックした場合(5つ以上知りたい場合など)
     } else if(text !== ""){
       var url = chrome.extension.getURL("/view/omni.html");
-      var createProp = {
-        url: url
-      };
+      var createProp = { url: url };
       chrome.tabs.create(createProp, function(tab) {
         chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
           if(tabId === tab.id) {
@@ -121,11 +120,10 @@ chrome.omnibox.onInputEntered.addListener(
           }
         });
       });
+    // その他
     } else {
       var url = chrome.extension.getURL("/view/popup.html");
-      var createProp = {
-        url: url
-      };
+      var createProp = { url: url };
       chrome.tabs.create(createProp);
     }
 });
