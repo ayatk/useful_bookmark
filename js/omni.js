@@ -23,7 +23,6 @@ function db_query_d(sql) {
 }
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendRes) {
-  console.log(message.text);
   //検索文構築
   var sql = "";
   var d = message.text.replace(/\s+/, " ").split(" ");

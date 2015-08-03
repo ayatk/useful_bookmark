@@ -19,7 +19,8 @@
   "omnibox": { "keyword":"ub" },
   "background": {
     "scripts": [
-      "js/background.js"
+      "js/background.js",
+      "js/jquery.js"
     ]
   },
   "permissions": ["contextMenus", "tabs"]
