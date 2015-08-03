@@ -16,8 +16,13 @@
     "default_title": "Bookmark",
     "default_popup": "view/popup.html"
   },
+  "omnibox": { "keyword":"ub" },
   "background": {
-    "scripts": ["js/background.js"]
-  }, 
+    "scripts": [
+      "js/background.js",
+      "js/omni.js",
+      "js/jquery.js"
+    ]
+  },
   "permissions": ["contextMenus", "tabs"]
 }
