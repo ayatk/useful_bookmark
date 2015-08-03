@@ -68,7 +68,3 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
     suggest(response);
   });
 });
-
-chrome.omnibox.onInputEntered.addListener(function(text, disposition) {
-  alert(text);
-});
