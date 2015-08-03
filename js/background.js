@@ -63,8 +63,12 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
     var response = [];
     for (var i = 0; i < rset.rows.length; i++) {
       var item = rset.rows.item(i);
-      response.push({content: item.url, description: item.name});
+      response.push({content: ""+item.id, description: "<url>" + item.url + "</url> - <dim>" + item.name + "</dim>"});
     }
     suggest(response);
   });
+});
+
+chrome.omnibox.onInputEntered.addListener(function(text, disposition) {
+  alert(text);
 });

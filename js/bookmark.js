@@ -82,7 +82,7 @@ function db_query(sql) {
 }
 
 function search_bookmark(text) {
-    var sql = "";
+    var sql = generateSQL(text);
     $("#result").empty();
 
     db_query(sql).done(function(r) {
@@ -90,7 +90,7 @@ function search_bookmark(text) {
       r.forEach(function(item) {
         res += '<li class="black-text collection-item"><span class="title result-title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><p style="clear: both"><br><span class="badge tags" data-id="' + item.id + '"></span></p></li>';
         get_tags(item.id);
-      }
+      });
       $("#result").html(res);
       $('.tooltipped').tooltip({delay: 10});
       $(".option-link").click(function() {
@@ -129,7 +129,6 @@ function add_bookmark() {
 chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
   switch(req.action) {
   case 'resolve':
-    console.log(req);
     dfds[req.id].resolve(req.data);
     break;
   default:
