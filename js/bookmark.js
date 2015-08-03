@@ -8,7 +8,7 @@
  * bookmark.id --+-- tag.bid
  *               |
  *               +-- memo.bid
- * 
+ *
  * create table if not exists bookmark(id integer primary key autoincrement, name text, url text);
  * create table if not exists tag     (id integer primary key autoincrement, bid integer, name text);
  * create table if not exists memo    (id integer primary key autoincrement, bid integer, value text);
@@ -48,6 +48,7 @@ $(function() {
 
   $("#opt_remove").click(function() {
     if(confirm("Are you sure?")) {
+      var id = $("#opt_apply").data("id");
       db_query("delete from bookmark where id = " + id);
     }
     $("#option_modal").closeModal();
