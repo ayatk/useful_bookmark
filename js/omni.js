@@ -89,7 +89,7 @@ chrome.omnibox.onInputEntered.addListener(
         } else {
           //html生成
           var html = '<html><head><title>Usefull Bookmark</title>' +
-                     '<link rel="stylesheet" href="../css/materialize.min.css"><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><script type="text/javascript" src="../js/jquery.js"></script><script type="text/javascript" src="../js/materialize.min.js"></script>' +
+                     '<link rel="stylesheet" href="../css/materialize.min.css"><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><link rel="stylesheet" href="../css/omni.css"><script type="text/javascript" src="../js/jquery.js"></script><script type="text/javascript" src="../js/materialize.min.js"></script>' +
                      '</head><body class="row">' +
                      '<div><h1 class="center-align col s12">Result</h1><hr style="margin-top: 20px;">' +
                      '<div id="result">'
@@ -108,7 +108,7 @@ chrome.omnibox.onInputEntered.addListener(
         }
       });
     } else {
-      var html = '<html><head><title>Usefull Bookmark</title></head>' +
+      var html = '<html><head><link rel="stylesheet" href="../css/blank.css"><title>Usefull Bookmark</title></head>' +
                  '<body><iframe seamless sandbox="allow-same-origin allow-forms allow-scripts" src="../view/popup.html"></iframe></body></html>';
       var win = window.open();
       win.document.open();
