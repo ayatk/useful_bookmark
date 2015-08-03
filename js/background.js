@@ -14,6 +14,10 @@ function add_bookmark(info, tab) {
 chrome.contextMenus.create({"title": "Add to bookmark", "onclick": add_bookmark});
 
 //Omnibox
+chrome.omnibox.onInputChanged.addListener(
+  function(text, suggest) {
+    chrome.omnibox.setDefaultSuggestion({description: "UsefulBookmarkで検索: " + text});
+});
 chrome.omnibox.onInputEntered.addListener(
   function(text) {
     if(text !== "") {
