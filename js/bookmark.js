@@ -25,7 +25,14 @@ $(function() {
 
   $("#add").click(add_bookmark);
 
-  $("#f-search").bind("submit keyup", search_bookmark);
+  $("#f-search").bind("submit keyup", function(e) {
+    e.preventDefault();
+    var text = $("#search").val();
+    if (text === "") {
+      return true;
+    }
+    search_bookmark(text);
+  });
 
   $("#opt_apply").click(function() {
     var id = $("#opt_apply").data("id");
@@ -74,65 +81,8 @@ function db_query(sql) {
   return dfd.promise();
 }
 
-function search_bookmark(event) {
-    event.preventDefault();
-    var text = $("#search").val();
-    if (text === "") {
-      return true;
-    }
-
+function search_bookmark(text) {
     var sql = "";
-    var d = text.replace(/\s+/, " ").split(" ");
-    var s = 0;
-
-    for (var i = 0; i < d.length; i++) {
-      if (d[i].startsWith("-")) {
-        d[i] = d[i].substr(1);
-        sql += "not ";
-      }
-      if (d[i].split(":").length != 1) {
-        var m = d[i].split(":");
-        switch(m[0]) {
-        case "url":
-          sql += 'url like "%' + m[1] + '%"';
-          break;
-        case "all":
-          sql += '(url like "%' + m[1] + '%" or name like "%' + m[1] + '%" or id in (select bid from tag where name like "%' + m[1] + '%"))';
-          break;
-        default:
-          sql += 'name like "%' + d[i] + '%"';
-        }
-      } else if (d[i][0] == "#") {
-        var hash = d[i].substr(1);
-        sql += 'id in (select bid from tag where name like "%' + hash + '%")';
-      } else if (d[i] !== "") {
-        sql += 'name like "%' + d[i] + '%"';
-      }
-      sql += ")";
-      if (i + 1 < d.length) {
-        switch(d[i + 1]) {
-        case "and":
-        case "&&":
-          sql += " and ";
-          i++;
-          break;
-        case "or":
-        case "||":
-          sql += " or ";
-          i++;
-          break;
-        default:
-          sql += " and ";
-        }
-        s++;
-        continue;
-      }
-    }
-    for(var i = 0; i <= s; i++) {
-      sql = "(" + sql;
-    }
-    sql = "select * from bookmark where " + sql;
-
     $("#result").empty();
 
     db_query(sql).done(function(r) {
@@ -160,6 +110,7 @@ function search_bookmark(event) {
     });
     return false;
 }
+
 
 function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function(r2) {
