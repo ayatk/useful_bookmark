@@ -1,4 +1,5 @@
 function generateSQL(text) {
+  var sql = "";
   var d = text.replace(/\s+/, " ").split(" ");
   var s = 0;
 

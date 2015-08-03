@@ -53,4 +53,18 @@ chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
     }
     sendResponse("a");
 });
+
 chrome.contextMenus.create({"title": "Add to bookmark", "onclick": cb_add});
+
+chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
+  var sql = generateSQL(text);
+  db_query(sql).done(function(rset) {
+    rset = rset[0];
+    var response = [];
+    for (var i = 0; i < rset.rows.length; i++) {
+      var item = rset.rows.item(i);
+      response.push({content: item.url, description: item.name});
+    }
+    suggest(response);
+  });
+});
