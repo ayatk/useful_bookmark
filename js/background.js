@@ -93,6 +93,7 @@ chrome.omnibox.onInputEntered.addListener(function(text) {
         if(tabId === tab.id && !sent) {
           chrome.tabs.sendMessage(tab.id, items);
           sent = true;
+          items = [];
         }
       });
     });
