@@ -56,15 +56,51 @@ chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
 
 chrome.contextMenus.create({"title": "Add to bookmark", "onclick": cb_add});
 
+var items = [];
+var sent = false;
 chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
   var sql = generateSQL(text);
   db_query(sql).done(function(rset) {
     rset = rset[0];
+    console.log(rset);
     var response = [];
     for (var i = 0; i < rset.rows.length; i++) {
       var item = rset.rows.item(i);
       response.push({content: ""+item.id, description: "<url>" + item.url + "</url> - <dim>" + item.name + "</dim>"});
+      items.push(item);
     }
     suggest(response);
   });
+});
+
+chrome.omnibox.onInputEntered.addListener(function(text) {
+  sent = false;
+  // サジェストをクリックした場合
+  textMatch = text.match(/\d+/)
+  if(textMatch) {
+    var item = items.filter(function(itemIn) {
+      return (itemIn.id === parseInt(textMatch[0]));
+    })[0];
+    var url = item.url;
+    var createProp = { url: url };
+    chrome.tabs.create(createProp);
+  // UsefulBookmarkで検索をクリックした場合(5つ以上知りたい場合など)
+  } else if(text !== ""){
+    var url = chrome.extension.getURL("/view/omni.html");
+    var createProp = { url: url };
+    chrome.tabs.create(createProp, function(tab) {
+      chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+        if(tabId === tab.id && !sent) {
+          chrome.tabs.sendMessage(tab.id, items);
+          sent = true;
+          items = [];
+        }
+      });
+    });
+  // その他
+  } else {
+    var url = chrome.extension.getURL("/view/popup.html");
+    var createProp = { url: url };
+    chrome.tabs.create(createProp);
+  }
 });
