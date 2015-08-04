@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener(function(items, sender, sendRes) {
     // マッチしたものが1つの場合は転送
     var url = items[0].url;
     var updateProp = { url: url };
-    chrome.tabs.update(updateProp)
+    chrome.tabs.update(updateProp);
   } else {
     // html生成
     var html = "";
@@ -18,6 +18,8 @@ chrome.runtime.onMessage.addListener(function(items, sender, sendRes) {
       html += '<div class="col s12"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Nothing Found</span></div></div></div>';
     }
     // htmlを適応
-    $(document.documentElement).find("#result").append(html);
+    $result = $(document.documentElement).find("#result")
+    $result.children().remove();
+    $result.append(html);
   }
 });

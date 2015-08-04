@@ -59,7 +59,6 @@ chrome.contextMenus.create({"title": "Add to bookmark", "onclick": cb_add});
 var items = [];
 chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
   var sql = generateSQL(text);
-  items = []; //消さないと複数messageが送られるため
   db_query(sql).done(function(rset) {
     rset = rset[0];
     console.log(rset);
