@@ -57,6 +57,7 @@ chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
 chrome.contextMenus.create({"title": "Add to bookmark", "onclick": cb_add});
 
 var items = [];
+var sent = false;
 chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
   var sql = generateSQL(text);
   db_query(sql).done(function(rset) {
@@ -73,6 +74,7 @@ chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
 });
 
 chrome.omnibox.onInputEntered.addListener(function(text) {
+  sent = false;
   // サジェストをクリックした場合
   textMatch = text.match(/\d+/)
   if(textMatch) {
@@ -88,8 +90,9 @@ chrome.omnibox.onInputEntered.addListener(function(text) {
     var createProp = { url: url };
     chrome.tabs.create(createProp, function(tab) {
       chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-        if(tabId === tab.id) {
+        if(tabId === tab.id && !sent) {
           chrome.tabs.sendMessage(tab.id, items);
+          sent = true;
         }
       });
     });
