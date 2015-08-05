@@ -114,7 +114,7 @@ function search_bookmark(text) {
 
 function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function(r2) {
-    $(".tags[data-id='" + id + "']").text(r2.map(function(d) {return d.name;}).join(", "));
+    $(".tags[data-id='" + id + "']").text(r2.map(function(d) {return d.name}).join(", "));
   });
 }
 
