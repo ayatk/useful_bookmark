@@ -58,6 +58,8 @@ $(function() {
       db_query("delete from bookmark where id = " + id);
     }
     $("#option_modal").closeModal();
+    $("#f-search").submit();
+
   });
 
   db_query("select * from tag group by name").done(function(r) {
