@@ -58,6 +58,8 @@ $(function () {
       db_query("delete from bookmark where id = " + id);
     }
     $("#option_modal").closeModal();
+    $("#f-search").submit();
+
   });
 
   db_query("select * from tag group by name").done(function (r) {
@@ -117,7 +119,7 @@ function search_bookmark(text) {
 function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function (r2) {
     $(".tags[data-id='" + id + "']").text(r2.map(function (d) {
-      return d.name;
+      return d.name
     }).join(", "));
   });
 }

@@ -12,19 +12,19 @@ function generateSQL(text) {
       var m = d[i].split(":");
       switch (m[0]) {
         case "url":
-          sql += 'url like "%' + m[1] + '%"';
+          sql += 'url like "%' + escapeQuery(m[1]) + '%"';
           break;
         case "all":
-          sql += '(url like "%' + m[1] + '%" or name like "%' + m[1] + '%" or id in (select bid from tag where name like "%' + m[1] + '%"))';
+          sql += '(url like "%' + escapeQuery(m[1]) + '%" or name like "%' + escapeQuery(m[1]) + '%" or id in (select bid from tag where name like "%' + escapeQuery(m[1]) + '%"))';
           break;
         default:
-          sql += 'name like "%' + d[i] + '%"';
+          sql += 'name like "%' + escapeQuery(d[i]) + '%"';
       }
     } else if (d[i][0] == "#") {
       var hash = d[i].substr(1);
-      sql += 'id in (select bid from tag where name like "%' + hash + '%")';
+      sql += 'id in (select bid from tag where name like "%' + escapeQuery(hash) + '%")';
     } else if (d[i] !== "") {
-      sql += 'name like "%' + d[i] + '%"';
+      sql += 'name like "%' + escapeQuery(d[i]) + '%"';
     }
     sql += ")";
     if (i + 1 < d.length) {
@@ -53,3 +53,6 @@ function generateSQL(text) {
   return sql;
 }
 
+function escapeQuery(input) {
+  return input.replace(/'/g, "''");
+}

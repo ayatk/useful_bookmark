@@ -21,7 +21,7 @@ function db_query(sql, id) {
 }
 
 function add_bookmark(title, url) {
-  db_query("insert or ignore into bookmark(name, url) values('" + title + "', '" + url + "');", []);
+  db_query("insert or ignore into bookmark(name, url) values('" + escapeQuery(title) + "', '" + url + "');", []);
 }
 
 function del_bookmark(id) {
