@@ -8,10 +8,10 @@ function db_query(sql, id) {
   var dfd = jQuery.Deferred();
   var sid = id;
   db.transaction(
-    function(t) {
+    function (t) {
       t.executeSql(sql,
         [],
-        function(t, r) {
+        function (t, r) {
           dfd.resolve([r, sid]);
         }
       );
@@ -32,16 +32,16 @@ function cb_add(info, tab) {
   add_bookmark(tab["title"], tab["url"]);
 }
 
-chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
-    switch(req.action) {
+chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
+  switch (req.action) {
     case 'sql':
-      db_query(req.sql, id).done(function(r) {
+      db_query(req.sql, id).done(function (r) {
         var rset = r[0];
         var response = [];
         for (var i = 0; i < rset.rows.length; i++) {
           response.push(rset.rows.item(i));
         }
-        chrome.runtime.sendMessage({action:"resolve", id:r[1], data:response});
+        chrome.runtime.sendMessage({action: "resolve", id: r[1], data: response});
       });
       sendResponse({id: id++});
       break;
@@ -50,57 +50,57 @@ chrome.runtime.onMessage.addListener(function(req, sender, sendResponse) {
       break;
     default:
       break;
-    }
-    sendResponse("a");
+  }
+  sendResponse("a");
 });
 
 chrome.contextMenus.create({"title": "Add to bookmark", "onclick": cb_add});
 
 var items = [];
 var sent = false;
-chrome.omnibox.onInputChanged.addListener(function(text, suggest) {
+chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
   var sql = generateSQL(text);
-  db_query(sql).done(function(rset) {
+  db_query(sql).done(function (rset) {
     rset = rset[0];
     console.log(rset);
     var response = [];
     for (var i = 0; i < rset.rows.length; i++) {
       var item = rset.rows.item(i);
-      response.push({content: ""+item.id, description: "<url>" + item.url + "</url> - <dim>" + item.name + "</dim>"});
+      response.push({content: "" + item.id, description: "<url>" + item.url + "</url> - <dim>" + item.name + "</dim>"});
       items.push(item);
     }
     suggest(response);
   });
 });
 
-chrome.omnibox.onInputEntered.addListener(function(text) {
+chrome.omnibox.onInputEntered.addListener(function (text) {
   sent = false;
   // サジェストをクリックした場合
   textMatch = text.match(/\d+/)
-  if(textMatch) {
-    var item = items.filter(function(itemIn) {
+  if (textMatch) {
+    var item = items.filter(function (itemIn) {
       return (itemIn.id === parseInt(textMatch[0]));
     })[0];
     var url = item.url;
-    var createProp = { url: url };
+    var createProp = {url: url};
     chrome.tabs.create(createProp);
-  // UsefulBookmarkで検索をクリックした場合(5つ以上知りたい場合など)
-  } else if(text !== ""){
+    // UsefulBookmarkで検索をクリックした場合(5つ以上知りたい場合など)
+  } else if (text !== "") {
     var url = chrome.extension.getURL("/view/omni.html");
-    var createProp = { url: url };
-    chrome.tabs.create(createProp, function(tab) {
-      chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-        if(tabId === tab.id && !sent) {
+    var createProp = {url: url};
+    chrome.tabs.create(createProp, function (tab) {
+      chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+        if (tabId === tab.id && !sent) {
           chrome.tabs.sendMessage(tab.id, items);
           sent = true;
           items = [];
         }
       });
     });
-  // その他
+    // その他
   } else {
     var url = chrome.extension.getURL("/view/popup.html");
-    var createProp = { url: url };
+    var createProp = {url: url};
     chrome.tabs.create(createProp);
   }
 });
