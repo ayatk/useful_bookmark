@@ -1,19 +1,19 @@
 # useful\_bookmark
-Google Chrome�̃u�b�N�}�[�N�����@�\�����܂�ɕn�ゾ�����̂ŁA�f�[�^�x�[�X�I�Ɉ��������E�����@�\���~�����E�^�O�t���������̋C�����Ŏ�������Google Chrome Extension�ł��B
+Google Chromeのブックマーク検索機能があまりに貧弱だったので、データベース的に扱いたい・検索機能が欲しい・タグ付けしたいの気持ちで実装したGoogle Chrome Extensionです。
 
-# �g����
-�C���X�g�[������ƃy�[�W�̍���Ƀ{�^���A�E�N���b�N���j���[��"Add to bookmark"���j���[���o�����܂��B����̃{�^���������ƌ��������J���A�����ł��u�b�N�}�[�N�̒ǉ������邱�Ƃ��ł��܂��B
+# 使い方
+インストールするとページの左上にボタン、右クリックメニューに"Add to bookmark"メニューが出現します。左上のボタンを押すと検索窓が開き、ここでもブックマークの追加をすることができます。
 
-# �����N�G��
-��{�I�ɂ̓^�C�g�������ł��B
-`-abcd`��abcd�̔ے�����邱�Ƃ��o���܂��B�J�b�R�ɂ͍��̂Ƃ����Ή��ł��B
-`A or B`, `A || B`�Ř_���a�����A`A and B`, `A && B`�Ř_���ό������ł��܂��B
-url�Ɋ܂܂�镶����̏ꍇ��`url:example.com`���g�����Ƃ��o���܂��B
-�^�O�����̏ꍇ��`#tag`�Ō����ł��܂��B
-�^�C�g���E�^�O�EURL�S�Ă̂����ǂꂩ�ɍ��v���镨����������������`all:`���g���A`all:slide`�̂悤�Ɏg���܂��B
+# 検索クエリ
+基本的にはタイトル検索です。
+`-abcd`でabcdの否定をすることが出来ます。カッコには今のところ非対応です。
+`A or B`, `A || B`で論理和検索、`A and B`, `A && B`で論理積検索ができます。
+urlに含まれる文字列の場合は`url:example.com`を使うことが出来ます。
+タグ検索の場合は`#tag`で検索できます。
+タイトル・タグ・URL全てのうちどれかに合致する物を検索したい時は`all:`を使い、`all:slide`のように使います。
 
-# �I�v�V����
-�������ʂ̊e�G���g���ɂ�option�Ƃ��������N���t���Ă��܂��B������N���b�N����ƃI�v�V�����_�C�A���O���J�A���O/URL/�^�O�̕ҏW���\�ł��B�܂��AREMOVE�{�^�����������Ƃō폜���\�ł��B
+# オプション
+検索結果の各エントリにはoptionというリンクが付いています。これをクリックするとオプションダイアログが開、名前/URL/タグの編集が可能です。また、REMOVEボタンを押すことで削除も可能です。
 
-# �I���j�T�[�`
-�A�h���X�o�[�Ɂuub&lt;tab&gt;�v�Ƒł����ނ��Ƃ�useful bookmark���ɑ��݂���f�[�^���A�h���X�o�[���猟���o���܂��B�g����N�G���[�͑S�ď�Ɠ����ł��B
+# オムニサーチ
+アドレスバーに「ub&lt;tab&gt;」と打ち込むことでuseful bookmark内に存在するデータをアドレスバーから検索出来ます。使えるクエリーは全て上と同じです。
