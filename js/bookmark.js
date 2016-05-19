@@ -90,7 +90,7 @@ function search_bookmark(text) {
   db_query(sql).done(function (r) {
     var res = '<li class="collection-header"><h6>' + r.length + ' results</h6></li>';
     r.forEach(function (item) {
-      res += '<li class="black-text collection-item"><span class="title result-title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><p style="clear: both"><br><span class="badge tags" data-id="' + item.id + '"></span></p></li>';
+      res += '<li class="black-text collection-item"><span class="title result-title"><a href="' + item.url + '" target="_blank" class="tooltipped" data-tooltip="' + item.url + '">' + item.name + '</a></span><a href="#" class="option-link secondary-content" data-id="' + item.id + '"><i class="material-icons">settings</i></a><div style="clear: both" class="badge tags" data-id="' + item.id + '"></div></li>';
       get_tags(item.id);
     });
     $("#result").html(res);
@@ -119,9 +119,10 @@ function search_bookmark(text) {
 
 function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function (r2) {
-    $(".tags[data-id='" + id + "']").text(r2.map(function (d) {
-      return d.name
-    }).join(", "));
+    $(".tags[data-id='" + id + "']").empty();
+    r2.forEach(function (item2) {
+      $(".tags[data-id='" + id + "']").append("<div class=\"chip\">" + item2.name + "</div>")
+    });
   });
 }
 
