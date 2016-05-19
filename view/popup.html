@@ -8,19 +8,12 @@
   <script type="text/javascript" src="../js/materialize.min.js"></script>
   <script type="text/javascript" src="../js/bookmark.js"></script>
   <style type="text/css">
-    h1 {
-      font-size: 3em;
-    }
 
     html, body {
       min-width: 500px;
       width: 600px;
       word-wrap: break-word;
-      margin: 0px auto;
-    }
-
-    form {
-      padding: 20px;
+      margin: 0 auto;
     }
 
     a[id^=opt-] {
@@ -38,23 +31,23 @@
   </style>
 </head>
 <body class="row">
+<div class="navbar-fixed">
+  <nav>
+    <div class="nav-wrapper  blue-grey">
+      <form id="f-search" class="input-field">
+        <input type="search" id="search" placeholder="Useful Bookmark" autocomplete="off" autofocus>
+        <label for="search"><i class="material-icons">search</i></label>
+        <i class="material-icons">close</i>
+      </form>
+    </div>
+  </nav>
+</div>
 <div>
-  <h1 class="center-align col s12">Bookmarks</h1>
-  <form class="col s12 container" style="margin-bottom:20px;" id="f-search">
-    <div class="col s12 input-field">
-      <label for="search">Text</label>
-      <input type="text" id="search" autofocus>
-    </div>
-    <div class="input-field col s2">
-      <a class="btn blue lighten-1 waves-effect waves-light" id="add">add</a>
-    </div>
-    <div class="input-field col s4">
+  <form class="col s12 container" style="margin-bottom:20px;">
+    <div class="input-field col s5">
       <select class="browser-default" id="tags-select" style="height: 36px;">
         <option value="0" disabled selected>Tags</option>
       </select>
-    </div>
-    <div class="input-field col s4">
-      <a class="btn blue lighten-1 waves-effect waves-light" id="exec">Search</a>
     </div>
   </form>
   <hr style="margin-top: 20px;">
@@ -66,21 +59,19 @@
     <div class="modal-content row flow-text">
       <h4>Option</h4>
       <div>
-        <div>
-          <div class="col s4">Name:
-          </div
-          >
-          <input class="col s8" id="opt_name">
+        <div class="input-field col s12">
+          <input id="opt_name" type="text" class="validate">
+          <label class="active" for="opt_name">Name</label>
         </div>
         <br>
-        <div>
-          <div class="col s4">URL:</div>
-          <input class="col s8" id="opt_url">
+        <div class="input-field col s12">
+          <input id="opt_url" type="text" class="validate">
+          <label class="active" for="opt_url">URL</label>
         </div>
         <br>
-        <div>
-          <div class="col s4">Tags:</div>
-          <input class="col s8" id="opt_tags">
+        <div class="input-field col s12">
+          <input id="opt_tags" type="text" class="validate">
+          <label class="active" for="opt_tags">Tags</label>
         </div>
         <br>
       </div>

@@ -109,6 +109,7 @@ function search_bookmark(text) {
         }).join(","));
 
         $("#option_modal").openModal();
+        Materialize.updateTextFields();
       });
     });
   });
