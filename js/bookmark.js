@@ -116,7 +116,6 @@ function search_bookmark(text) {
   return false;
 }
 
-
 function get_tags(id) {
   db_query('select * from tag where bid = ' + id).done(function (r2) {
     $(".tags[data-id='" + id + "']").empty();

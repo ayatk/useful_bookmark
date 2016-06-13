@@ -1,21 +1,30 @@
 {
   "manifest_version": 2,
-  "name":"Useful Bookmark",
-  "version":"1.0",
+  "name": "Useful Bookmark",
+  "version": "1.0",
   "icons": {
-    "18":"images/star_36pt.png",
-    "36":"images/star_54pt.png",
-    "72":"images/star_72pt.png",
-    "144":"images/star_144pt.png"
+    "18": "images/star_36pt.png",
+    "36": "images/star_54pt.png",
+    "72": "images/star_72pt.png",
+    "144": "images/star_144pt.png"
   },
   "browser_action": {
-    "default_icon":"images/star_144pt.png",
+    "default_icon": "images/star_144pt.png",
     "default_title": "Bookmark",
     "default_popup": "view/popup.html"
   },
-  "omnibox": { "keyword":"ub" },
-  "background": {
-    "scripts": ["js/jquery.js", "js/common.js", "js/background.js"]
+  "omnibox": {
+    "keyword": "ub"
   },
-  "permissions": ["contextMenus", "tabs"]
+  "background": {
+    "scripts": [
+      "js/jquery.js",
+      "js/common.js",
+      "js/background.js"
+    ]
+  },
+  "permissions": [
+    "contextMenus",
+    "tabs"
+  ]
 }

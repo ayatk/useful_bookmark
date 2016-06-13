@@ -43,7 +43,6 @@ function generateSQL(text) {
           sql += " and ";
       }
       s++;
-      continue;
     }
   }
   for (var i = 0; i <= s; i++) {

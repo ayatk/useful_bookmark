@@ -1,4 +1,4 @@
-# useful\_bookmark
+# Useful Bookmark
 Google Chromeのブックマーク検索機能があまりに貧弱だったので、データベース的に扱いたい・検索機能が欲しい・タグ付けしたいの気持ちで実装したGoogle Chrome Extensionです。
 
 # 使い方
