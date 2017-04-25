@@ -17,3 +17,9 @@ urlに含まれる文字列の場合は`url:example.com`を使うことが出来
 
 # オムニサーチ
 アドレスバーに「ub&lt;tab&gt;」と打ち込むことでuseful bookmark内に存在するデータをアドレスバーから検索出来ます。使えるクエリーは全て上と同じです。
+
+## License
+The MIT License (MIT)
+
+Copyright (c) 2017 Aya Tokikaze  
+Copyright (c) 2015 Shiho Midorikawa
