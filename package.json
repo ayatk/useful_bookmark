@@ -10,9 +10,11 @@
       "url": "https://github.com/ayatk/useful_bookmark/blob/master/LICENSE"
     }
   ],
-  "author": "Aya Tokikaze <git@ayatk.com>",
+  "author": "Shiho Midorikawa <shiho.elliptic@gmail.com> (http://elliptic-shiho.github.io)",
+  "maintainers": [
+    "ayatk <git@ayatk.com>"
+  ],
   "contributors": [
-    "Shiho Midorikawa <shiho.elliptic@gmail.com> (http://elliptic-shiho.github.io)",
     "S (https://s.4na.xyz/)"
   ],
   "bugs": {
