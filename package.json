@@ -17,5 +17,15 @@
   ],
   "bugs": {
     "url": "https://github.com/ayatk/useful_bookmark/issues"
+  },
+  "scripts": {
+    "fix:prettier": "yarn lint:prettier --write",
+    "lint:prettier": "prettier . \"!test*\" --check"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.2"
+  },
+  "prettier": {
+    "semi": false
   }
 }

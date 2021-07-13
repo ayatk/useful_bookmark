@@ -1,57 +1,67 @@
 function generateSQL(text) {
-  var sql = "";
-  var d = text.replace(/\s+/, " ").split(" ");
-  var s = 0;
+  var sql = ""
+  var d = text.replace(/\s+/, " ").split(" ")
+  var s = 0
 
   for (var i = 0; i < d.length; i++) {
     if (d[i].startsWith("-")) {
-      d[i] = d[i].substr(1);
-      sql += "not ";
+      d[i] = d[i].substr(1)
+      sql += "not "
     }
     if (d[i].split(":").length != 1) {
-      var m = d[i].split(":");
+      var m = d[i].split(":")
       switch (m[0]) {
         case "url":
-          sql += 'url like "%' + escapeQuery(m[1]) + '%"';
-          break;
+          sql += 'url like "%' + escapeQuery(m[1]) + '%"'
+          break
         case "all":
-          sql += '(url like "%' + escapeQuery(m[1]) + '%" or name like "%' + escapeQuery(m[1]) + '%" or id in (select bid from tag where name like "%' + escapeQuery(m[1]) + '%"))';
-          break;
+          sql +=
+            '(url like "%' +
+            escapeQuery(m[1]) +
+            '%" or name like "%' +
+            escapeQuery(m[1]) +
+            '%" or id in (select bid from tag where name like "%' +
+            escapeQuery(m[1]) +
+            '%"))'
+          break
         default:
-          sql += 'name like "%' + escapeQuery(d[i]) + '%"';
+          sql += 'name like "%' + escapeQuery(d[i]) + '%"'
       }
     } else if (d[i][0] == "#") {
-      var hash = d[i].substr(1);
-      sql += 'id in (select bid from tag where name like "%' + escapeQuery(hash) + '%")';
+      var hash = d[i].substr(1)
+      sql +=
+        'id in (select bid from tag where name like "%' +
+        escapeQuery(hash) +
+        '%")'
     } else if (d[i] !== "") {
-      sql += 'name like "%' + escapeQuery(d[i]) + '%"';
+      sql += 'name like "%' + escapeQuery(d[i]) + '%"'
     }
-    sql += ")";
+    sql += ")"
     if (i + 1 < d.length) {
       switch (d[i + 1]) {
         case "and":
         case "&&":
-          sql += " and ";
-          i++;
-          break;
+          sql += " and "
+          i++
+          break
         case "or":
         case "||":
-          sql += " or ";
-          i++;
-          break;
+          sql += " or "
+          i++
+          break
         default:
-          sql += " and ";
+          sql += " and "
       }
-      s++;
+      s++
     }
   }
   for (var i = 0; i <= s; i++) {
-    sql = "(" + sql;
+    sql = "(" + sql
   }
-  sql = "select * from bookmark where " + sql;
-  return sql;
+  sql = "select * from bookmark where " + sql
+  return sql
 }
 
 function escapeQuery(input) {
-  return input.replace(/'/g, "''");
+  return input.replace(/'/g, "''")
 }
