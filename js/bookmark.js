@@ -1,3 +1,6 @@
+import { generateSQL } from "./common"
+import { Materialize } from "./materialize.min.js"
+
 /**
  * bookmark table:
  * [id, name, url]
@@ -13,7 +16,7 @@
  * create table if not exists tag     (id integer primary key autoincrement, bid integer, name text);
  * create table if not exists memo    (id integer primary key autoincrement, bid integer, value text);
  * */
-var dfds = []
+const dfds = []
 $(function () {
   db_query(
     "create table if not exists bookmark(id integer primary key autoincrement, name text unique, url text unique);"
@@ -33,7 +36,7 @@ $(function () {
 
   $("#f-search").bind("submit keyup", function (e) {
     e.preventDefault()
-    var text = $("#search").val()
+    const text = $("#search").val()
     if (text === "") {
       return true
     }
@@ -41,7 +44,7 @@ $(function () {
   })
 
   $("#opt_apply").click(function () {
-    var id = $("#opt_apply").data("id")
+    const id = $("#opt_apply").data("id")
     db_query(
       "update bookmark " +
         ' set name = "' +
@@ -52,8 +55,8 @@ $(function () {
         id
     )
     db_query("delete from tag where bid = " + id)
-    var tags = $("#opt_tags").val().split(",")
-    for (var i = 0; i < tags.length; i++) {
+    const tags = $("#opt_tags").val().split(",")
+    for (let i = 0; i < tags.length; i++) {
       if (tags[i] == "") continue
       db_query(
         "insert into tag(bid, name) values(" + id + ', "' + tags[i] + '");'
@@ -70,7 +73,7 @@ $(function () {
 
   $("#opt_remove").click(function () {
     if (confirm("Are you sure?")) {
-      var id = $("#opt_apply").data("id")
+      const id = $("#opt_apply").data("id")
       db_query("delete from bookmark where id = " + id)
     }
     $("#option_modal").closeModal()
@@ -82,7 +85,7 @@ $(function () {
       $("#tags-select").append($("<option>").val(item.name).text(item.name))
     })
   })
-  $("#tags-select").change(function (event) {
+  $("#tags-select").change(function () {
     $("#search").val(
       $("#search").val() +
         ($("#search").val().length < 1 ? "" : " ") +
@@ -96,7 +99,7 @@ $(function () {
 })
 
 function db_query(sql) {
-  var dfd = jQuery.Deferred()
+  const dfd = jQuery.Deferred()
   chrome.runtime.sendMessage({ action: "sql", sql: sql }, function (r) {
     dfds[r.id] = dfd
   })
@@ -104,11 +107,11 @@ function db_query(sql) {
 }
 
 function search_bookmark(text) {
-  var sql = generateSQL(text)
+  const sql = generateSQL(text)
   $("#result").empty()
 
   db_query(sql).done(function (r) {
-    var res =
+    let res =
       '<li class="collection-header"><h6>' + r.length + " results</h6></li>"
     r.forEach(function (item) {
       res +=
@@ -128,7 +131,7 @@ function search_bookmark(text) {
     $("#result").html(res)
     $(".tooltipped").tooltip({ delay: 10 })
     $(".option-link").click(function () {
-      var id = $(this).data("id")
+      const id = $(this).data("id")
       $("#opt_apply").data("id", id)
       db_query("select * from bookmark where id = " + id)
         .then(function (r) {
@@ -167,7 +170,7 @@ function get_tags(id) {
 
 function add_bookmark() {
   if (confirm("Are you sure?")) {
-    var tab = chrome.tabs.getSelected(null, function (tab) {
+    chrome.tabs.getSelected(null, function (tab) {
       chrome.runtime.sendMessage({
         action: "add",
         title: tab["title"],
@@ -177,7 +180,7 @@ function add_bookmark() {
   }
 }
 
-chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (req) {
   switch (req.action) {
     case "resolve":
       dfds[req.id].resolve(req.data)

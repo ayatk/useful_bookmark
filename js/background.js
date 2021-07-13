@@ -1,4 +1,6 @@
-var db = openDatabase("bookmark", "1.0", "bookmark", 65536)
+import { escapeQuery, generateSQL } from "./common"
+
+const db = openDatabase("bookmark", "1.0", "bookmark", 65536)
 db_query(
   "create table if not exists bookmark(id integer primary key autoincrement, name text, url text);"
 )
@@ -8,11 +10,11 @@ db_query(
 db_query(
   "create table if not exists memo    (id integer primary key autoincrement, bid integer, value text);"
 )
-var id = 0
+let id = 0
 
 function db_query(sql, id) {
-  var dfd = jQuery.Deferred()
-  var sid = id
+  const dfd = jQuery.Deferred()
+  const sid = id
   db.transaction(function (t) {
     t.executeSql(sql, [], function (t, r) {
       dfd.resolve([r, sid])
@@ -32,10 +34,6 @@ function add_bookmark(title, url) {
   )
 }
 
-function del_bookmark(id) {
-  db_query("delete from bookmark where id = " + id)
-}
-
 function cb_add(info, tab) {
   add_bookmark(tab["title"], tab["url"])
 }
@@ -44,9 +42,9 @@ chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
   switch (req.action) {
     case "sql":
       db_query(req.sql, id).done(function (r) {
-        var rset = r[0]
-        var response = []
-        for (var i = 0; i < rset.rows.length; i++) {
+        const rset = r[0]
+        const response = []
+        for (let i = 0; i < rset.rows.length; i++) {
           response.push(rset.rows.item(i))
         }
         chrome.runtime.sendMessage({
@@ -68,16 +66,16 @@ chrome.runtime.onMessage.addListener(function (req, sender, sendResponse) {
 
 chrome.contextMenus.create({ title: "Add to bookmark", onclick: cb_add })
 
-var items = []
-var sent = false
+let items = []
+let sent = false
 chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
-  var sql = generateSQL(text)
+  const sql = generateSQL(text)
   db_query(sql).done(function (rset) {
     rset = rset[0]
     console.log(rset)
-    var response = []
-    for (var i = 0; i < rset.rows.length; i++) {
-      var item = rset.rows.item(i)
+    const response = []
+    for (let i = 0; i < rset.rows.length; i++) {
+      const item = rset.rows.item(i)
       response.push({
         content: "" + item.id,
         description:
@@ -92,19 +90,16 @@ chrome.omnibox.onInputChanged.addListener(function (text, suggest) {
 chrome.omnibox.onInputEntered.addListener(function (text) {
   sent = false
   // サジェストをクリックした場合
-  textMatch = text.match(/\d+/)
+  const textMatch = text.match(/\d+/)
   if (textMatch) {
-    var item = items.filter(function (itemIn) {
+    const item = items.filter(function (itemIn) {
       return itemIn.id === parseInt(textMatch[0])
     })[0]
-    var url = item.url
-    var createProp = { url: url }
-    chrome.tabs.create(createProp)
+    chrome.tabs.create({ url: item.url })
     // UsefulBookmarkで検索をクリックした場合(5つ以上知りたい場合など)
   } else if (text !== "") {
-    var url = chrome.extension.getURL("/view/omni.html")
-    var createProp = { url: url }
-    chrome.tabs.create(createProp, function (tab) {
+    const url = chrome.extension.getURL("/view/omni.html")
+    chrome.tabs.create({ url: url }, function () {
       chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
         if (tabId === tab.id && !sent) {
           chrome.tabs.sendMessage(tab.id, items)
@@ -115,8 +110,7 @@ chrome.omnibox.onInputEntered.addListener(function (text) {
     })
     // その他
   } else {
-    var url = chrome.extension.getURL("/view/popup.html")
-    var createProp = { url: url }
-    chrome.tabs.create(createProp)
+    const url = chrome.extension.getURL("/view/popup.html")
+    chrome.tabs.create({ url: url })
   }
 })

@@ -1,8 +1,8 @@
-var db = openDatabase("bookmark", "1.0", "bookmark", 65536)
+const db = openDatabase("bookmark", "1.0", "bookmark", 65536)
 
 function db_query(sql, id) {
-  var dfd = jQuery.Deferred()
-  var sid = id
+  const dfd = jQuery.Deferred()
+  const sid = id
   db.transaction(function (t) {
     t.executeSql(sql, [], function (t, r) {
       dfd.resolve([r, sid])
@@ -11,35 +11,35 @@ function db_query(sql, id) {
   return dfd.promise()
 }
 
-chrome.runtime.onMessage.addListener(function (items, sender, sendRes) {
+chrome.runtime.onMessage.addListener(function (items) {
   console.log(items)
-  var itemLen = items.length
+  const itemLen = items.length
   if (itemLen === 1) {
     // マッチしたものが1つの場合は転送
-    var url = items[0].url
-    var updateProp = { url: url }
+    const url = items[0].url
+    const updateProp = { url: url }
     chrome.tabs.update(updateProp)
   } else {
     if (itemLen !== 0) {
       // tagを取得
-      var sql = "select * from tag"
+      const sql = "select * from tag"
       db_query(sql).done(function (rset) {
-        tagsSql = rset[0].rows
-        var tags = []
-        for (var i = 0; i < tagsSql.length; i++) {
+        const tagsSql = rset[0].rows
+        const tags = []
+        for (let i = 0; i < tagsSql.length; i++) {
           tags.push(tagsSql[i])
         }
         // html生成
-        var html = ""
-        for (var i = 0; i < itemLen; i++) {
+        let html = ""
+        for (let i = 0; i < itemLen; i++) {
           // タグの文字列を生成
-          var tag = tags.filter(function (itemIn) {
+          const tag = tags.filter(function (itemIn) {
             return itemIn.bid === items[i].id
           })
-          var tagLen = tag.length
-          var tagNames = ""
+          const tagLen = tag.length
+          let tagNames = ""
           if (tagLen > 0) {
-            for (var i = 0; i < tagLen; i++) {
+            for (let i = 0; i < tagLen; i++) {
               tagNames += tag[i].name
               if (i !== tagLen - 1) {
                 tagNames += ", "
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener(function (items, sender, sendRes) {
       })
     } else {
       // マッチしたものが0つの場合はnothing foundと表示
-      var html =
+      const html =
         '<div class="col s12"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Nothing Found</span></div></div></div>'
       // htmlを適応
       $(document.documentElement).find("#result").append(html)

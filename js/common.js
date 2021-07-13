@@ -1,15 +1,15 @@
-function generateSQL(text) {
-  var sql = ""
-  var d = text.replace(/\s+/, " ").split(" ")
-  var s = 0
+export function generateSQL(text) {
+  let sql = ""
+  const d = text.replace(/\s+/, " ").split(" ")
+  let s = 0
 
-  for (var i = 0; i < d.length; i++) {
+  for (let i = 0; i < d.length; i++) {
     if (d[i].startsWith("-")) {
       d[i] = d[i].substr(1)
       sql += "not "
     }
     if (d[i].split(":").length != 1) {
-      var m = d[i].split(":")
+      const m = d[i].split(":")
       switch (m[0]) {
         case "url":
           sql += 'url like "%' + escapeQuery(m[1]) + '%"'
@@ -28,7 +28,7 @@ function generateSQL(text) {
           sql += 'name like "%' + escapeQuery(d[i]) + '%"'
       }
     } else if (d[i][0] == "#") {
-      var hash = d[i].substr(1)
+      const hash = d[i].substr(1)
       sql +=
         'id in (select bid from tag where name like "%' +
         escapeQuery(hash) +
@@ -55,13 +55,13 @@ function generateSQL(text) {
       s++
     }
   }
-  for (var i = 0; i <= s; i++) {
+  for (let i = 0; i <= s; i++) {
     sql = "(" + sql
   }
   sql = "select * from bookmark where " + sql
   return sql
 }
 
-function escapeQuery(input) {
+export function escapeQuery(input) {
   return input.replace(/'/g, "''")
 }
