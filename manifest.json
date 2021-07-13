@@ -17,14 +17,7 @@
     "keyword": "ub"
   },
   "background": {
-    "scripts": [
-      "js/jquery.js",
-      "js/common.js",
-      "js/background.js"
-    ]
+    "scripts": ["js/jquery.js", "js/common.js", "js/background.js"]
   },
-  "permissions": [
-    "contextMenus",
-    "tabs"
-  ]
+  "permissions": ["contextMenus", "tabs"]
 }

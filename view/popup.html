@@ -1,97 +1,109 @@
 <html>
-<head>
-  <title>Useful Bookmark</title>
-  <link rel="stylesheet" href="../css/materialize.min.css">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script type="text/javascript" src="../js/jquery.js"></script>
-  <script type="text/javascript" src="../js/common.js"></script>
-  <script type="text/javascript" src="../js/materialize.min.js"></script>
-  <script type="text/javascript" src="../js/bookmark.js"></script>
-  <style type="text/css">
+  <head>
+    <title>Useful Bookmark</title>
+    <link rel="stylesheet" href="../css/materialize.min.css" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script type="text/javascript" src="../js/jquery.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+    <script type="text/javascript" src="../js/materialize.min.js"></script>
+    <script type="text/javascript" src="../js/bookmark.js"></script>
+    <style type="text/css">
+      html,
+      body {
+        min-width: 500px;
+        width: 600px;
+        word-wrap: break-word;
+        margin: 0 auto;
+      }
 
-    html, body {
-      min-width: 500px;
-      width: 600px;
-      word-wrap: break-word;
-      margin: 0 auto;
-    }
+      a[id^="opt-"] {
+        z-index: 9999;
+      }
 
-    a[id^=opt-] {
-      z-index: 9999;
-    }
+      .result-title {
+        float: left;
+        max-width: 94%;
+      }
 
-    .result-title {
-      float: left;
-      max-width: 94%;
-    }
+      .tags {
+        height: 32px;
+        margin: 12px 0;
+        padding: 12px 0;
+      }
 
-    .tags {
-      height: 32px;
-      margin: 12px 0;
-      padding: 12px 0;
-    }
+      .chip {
+        margin-right: 8px;
+      }
 
-    .chip {
-      margin-right: 8px;
-    }
-
-    #result {
-      border: 0
-    }
-  </style>
-</head>
-<body class="row">
-<div class="navbar-fixed">
-  <nav>
-    <div class="nav-wrapper  blue-grey">
-      <form id="f-search" class="input-field">
-        <input type="search" id="search" placeholder="Useful Bookmark" autocomplete="off" autofocus>
-        <label for="search"><i class="material-icons">search</i></label>
-        <i class="material-icons">close</i>
+      #result {
+        border: 0;
+      }
+    </style>
+  </head>
+  <body class="row">
+    <div class="navbar-fixed">
+      <nav>
+        <div class="nav-wrapper blue-grey">
+          <form id="f-search" class="input-field">
+            <input
+              type="search"
+              id="search"
+              placeholder="Useful Bookmark"
+              autocomplete="off"
+              autofocus
+            />
+            <label for="search"><i class="material-icons">search</i></label>
+            <i class="material-icons">close</i>
+          </form>
+        </div>
+      </nav>
+    </div>
+    <div>
+      <form class="col s12 container" style="margin-bottom: 20px">
+        <div class="input-field col s5">
+          <select class="browser-default" id="tags-select" style="height: 36px">
+            <option value="0" disabled selected>Tags</option>
+          </select>
+        </div>
       </form>
-    </div>
-  </nav>
-</div>
-<div>
-  <form class="col s12 container" style="margin-bottom:20px;">
-    <div class="input-field col s5">
-      <select class="browser-default" id="tags-select" style="height: 36px;">
-        <option value="0" disabled selected>Tags</option>
-      </select>
-    </div>
-  </form>
-  <hr style="margin-top: 20px;">
-  <div class="col s12 flow-text">
-    <ul id="result" class="collection with-header">
-    </ul>
-  </div>
-  <div class="modal" id="option_modal">
-    <div class="modal-content row flow-text">
-      <h4>Option</h4>
-      <div>
-        <div class="input-field col s12">
-          <input id="opt_name" type="text" class="validate">
-          <label class="active" for="opt_name">Name</label>
-        </div>
-        <br>
-        <div class="input-field col s12">
-          <input id="opt_url" type="text" class="validate">
-          <label class="active" for="opt_url">URL</label>
-        </div>
-        <br>
-        <div class="input-field col s12">
-          <input id="opt_tags" type="text" class="validate">
-          <label class="active" for="opt_tags">Tags</label>
-        </div>
-        <br>
+      <hr style="margin-top: 20px" />
+      <div class="col s12 flow-text">
+        <ul id="result" class="collection with-header"></ul>
       </div>
-      <div class="col offset-s8 s4"><a class="btn red" id="opt_remove">Remove</a></div>
-    </div>
-    <div class="modal-footer">
-      <div>
-        <a class="btn" style="margin-left: 10px;" id="opt_cancel">Cancel</a>
-        <a class="btn" id="opt_apply">OK</a>
+      <div class="modal" id="option_modal">
+        <div class="modal-content row flow-text">
+          <h4>Option</h4>
+          <div>
+            <div class="input-field col s12">
+              <input id="opt_name" type="text" class="validate" />
+              <label class="active" for="opt_name">Name</label>
+            </div>
+            <br />
+            <div class="input-field col s12">
+              <input id="opt_url" type="text" class="validate" />
+              <label class="active" for="opt_url">URL</label>
+            </div>
+            <br />
+            <div class="input-field col s12">
+              <input id="opt_tags" type="text" class="validate" />
+              <label class="active" for="opt_tags">Tags</label>
+            </div>
+            <br />
+          </div>
+          <div class="col offset-s8 s4">
+            <a class="btn red" id="opt_remove">Remove</a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div>
+            <a class="btn" style="margin-left: 10px" id="opt_cancel">Cancel</a>
+            <a class="btn" id="opt_apply">OK</a>
+          </div>
+        </div>
       </div>
     </div>
-</body>
+  </body>
 </html>
